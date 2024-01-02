@@ -4,4 +4,4 @@ import pandas as pd
 url = "https://en.wikipedia.org/wiki/List_of_states_and_union_territories_of_India_by_population"
 # Чтение файла с помощью pandas
 data = pd.read_html(url)
-print(data)
+print(f"Page has: {len(data)} table(s)")
