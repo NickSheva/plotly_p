@@ -14,7 +14,7 @@ table = data[1]
 # Сохраняем таблицу в excel
 table.to_excel('tab.xlsx')
 # Сохраняем таблицу в csv
-pd.DataFrame(table.to_csv('tab.csv', index=False))
+df = pd.DataFrame(table.to_csv('tab.csv', index=False))
 # Убираем первую строку из таблицы
 with open('tab.csv', 'r') as file:
     with open('table.csv', 'w') as f_out:
@@ -23,7 +23,10 @@ with open('tab.csv', 'r') as file:
         for i in file:
             # Запись нового файла
             f_out.write(i)
+
 # Открываем файл geojson
 filename = './states_india.geojson'
 india_state = json.load(open(filename, 'r'))
-print(india_state)
+# выводим на экран ключи
+print(india_state['features'][0].keys())
+
