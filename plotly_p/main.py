@@ -26,7 +26,19 @@ with open('tab.csv', 'r') as file:
 
 # Открываем файл geojson
 filename = './states_india.geojson'
-india_state = json.load(open(filename, 'r'))
+india_states = json.load(open(filename, 'r'))
 # выводим на экран ключи
-print(india_state['features'][0].keys())
+print(india_states['features'][0].keys())
+# Находим ключ словоря 'properties'  в словаре 'features'
+print(india_states['features'][1]['properties'])
+# Создаем новый словарь
+state_id_map = {}
+# запускаем цикл для сохраниния значения 'state_code' в
+# значение 'st_nm' в словаре  state_id_map[feature['properties']['st_nm']]
+# через новое значение feature['id']
+for feature in india_states["features"]:
+    feature['id'] = feature['properties']['state_code']
+    state_id_map[feature['properties']['st_nm']] = feature['id']
+print(state_id_map)
+
 
