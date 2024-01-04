@@ -23,7 +23,11 @@ with open('tab.csv', 'r') as file:
         for i in file:
             # Запись нового файла
             f_out.write(i)
-
+# открывает изменненый файл
+df = pd.read_csv('table.csv')
+# используем функцию lambda для схранения значения  int в df['Density]
+df['Density'] = df['Density [a]'].apply(lambda x: int(x))
+print(df['Density'])
 # Открываем файл geojson
 filename = './states_india.geojson'
 india_states = json.load(open(filename, 'r'))
@@ -39,6 +43,6 @@ state_id_map = {}
 for feature in india_states["features"]:
     feature['id'] = feature['properties']['state_code']
     state_id_map[feature['properties']['st_nm']] = feature['id']
-print(state_id_map)
+
 
 
