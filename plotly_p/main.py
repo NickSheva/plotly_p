@@ -2,6 +2,9 @@
 и сохрание в .csv file"""
 import pandas as pd
 import json
+import plotly.express as px
+import plotly.io as pio
+
 
 # Путь к таблице на сайте wikipedia
 page = "https://en.wikipedia.org/wiki/List_of_states_and_union_territories_of_India_by_population"
@@ -23,18 +26,17 @@ with open('tab.csv', 'r') as file:
         for i in file:
             # Запись нового файла
             f_out.write(i)
-# открывает изменненый файл
 df = pd.read_csv('table.csv')
-# используем функцию lambda для схранения значения  int в df['Density]
-df['Density'] = df['Density [a]'].apply(lambda x: int(x))
-print(df['Density'])
+# заменяем знак [c] после Manipur на ''
+df["State or Union Territory"] = df["State or Union Territory"].apply(lambda x: x.replace('[c]', ''))
+print(df["State or Union Territory"])
 # Открываем файл geojson
 filename = './states_india.geojson'
 india_states = json.load(open(filename, 'r'))
 # выводим на экран ключи
 print(india_states['features'][0].keys())
 # Находим ключ словоря 'properties'  в словаре 'features'
-print(india_states['features'][1]['properties'])
+print(india_states['features'][0]['properties'])
 # Создаем новый словарь
 state_id_map = {}
 # запускаем цикл для сохраниния значения 'state_code' в
@@ -43,6 +45,12 @@ state_id_map = {}
 for feature in india_states["features"]:
     feature['id'] = feature['properties']['state_code']
     state_id_map[feature['properties']['st_nm']] = feature['id']
-
+# Заменяем '&' на 'and' как и в файле .csv
+state_id_map = {x.replace('&', 'and'): value for x, value in state_id_map.items()}
+print(state_id_map)
+# открывает изменненый файл
+df = pd.read_csv('table.csv')
+# используем функцию lambda для схранения значения  int в df['Density]
+df['Density'] = df['Density [a]'].apply(lambda x: int(x))
 
 
