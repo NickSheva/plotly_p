@@ -69,4 +69,6 @@ df = df.drop([34, 36])
 df["id"] = df["State or Union Territory"].apply(lambda x: state_id_map[x])
 # Выводим новую таблицу с новые заголовки с данными
 print(list(df.columns.values.tolist()))
+fig = px.choropleth(df, locations='id', geojson=india_states, color='Density', scope='asia')
+fig.show()
 
