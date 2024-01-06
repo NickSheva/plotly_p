@@ -59,4 +59,9 @@ print(list(df.columns.values.tolist()))
 #  Изменяем данные на int с помощью фукции lambda и мета apply применяем ко всем
 #  сохраняем в новой переменной
 df['Density'] = df["Density [a]"].apply(lambda x: int(x))
-print(df["Density"])
+# print(df["Density"])
+# Удаляем две строчки 34 и 36, которых нет в .geojson file
+df = df.drop([34, 36])
+# Все города
+print(df["State or Union Territory"])
+
