@@ -69,6 +69,9 @@ df = df.drop([34, 36])
 df["id"] = df["State or Union Territory"].apply(lambda x: state_id_map[x])
 # Выводим новую таблицу с новые заголовки с данными
 print(list(df.columns.values.tolist()))
+# Вводим необходимые данные для отображения индии на карте мира
 fig = px.choropleth(df, locations='id', geojson=india_states, color='Density', scope='asia')
+# скрываем карту мира
+fig.update_geos(fitbounds='locations', visible=False)
 fig.show()
 
