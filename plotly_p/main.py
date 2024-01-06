@@ -46,22 +46,27 @@ for feature in india_states["features"]:
     feature['id'] = feature['properties']['state_code']
     state_id_map[feature['properties']['st_nm']] = feature['id']
 
-# Заменяем '&' на 'and' и изменяем название некоторых городов как и в файле .csv
+# Заменяем '&' на 'and', убираем [c] в конце города, изменяем название некоторых городов как и в файле .csv
 state_id_map = {key.replace('&', 'and').replace('Telengana', 'Telangana')
                 .replace('Delhi', 'NCT of Delhi')
-                .replace('Andaman and Nicobar', 'Andaman and Nicobar Islands'):
+                .replace('Andaman and Nicobar', 'Andaman and Nicobar Islands')
+                .replace('Manipur', 'Manipur[c]'):
                     value for key, value in state_id_map.items()}
 # print(state_id_map.keys())
 df = pd.read_csv('table.csv')
 # Вывод для заголовков таблицы
-print(list(df.columns.values.tolist()))
+# print(list(df.columns.values.tolist()))
 #  print(df["Density [a]"])
 #  Изменяем данные на int с помощью фукции lambda и мета apply применяем ко всем
-#  сохраняем в новой переменной
+#  сохраняем в новой переменной для всей таблицы
 df['Density'] = df["Density [a]"].apply(lambda x: int(x))
-# print(df["Density"])
-# Удаляем две строчки 34 и 36, которых нет в .geojson file
+#  print(df["Density"])
+#  Удаляем две строчки 34 и 36, которых нет в .geojson file
 df = df.drop([34, 36])
-# Все города
-print(df["State or Union Territory"])
+#  Все города
+#  print(df["State or Union Territory"])
+# Вставляем 'id' в таблицу городов посредсвом apply и lambda
+df["id"] = df["State or Union Territory"].apply(lambda x: state_id_map[x])
+# Выводим новую таблицу с новые заголовки с данными
+print(list(df.columns.values.tolist()))
 
