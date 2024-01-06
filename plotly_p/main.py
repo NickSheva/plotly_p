@@ -7,6 +7,7 @@ import plotly.express as px
 import plotly.io as pio
 
 
+pio.renderers.default = 'browser'
 # Путь к таблице на сайте wikipedia
 page = "https://en.wikipedia.org/wiki/List_of_states_and_union_territories_of_India_by_population"
 # Чтение файла с помощью pandas
@@ -72,13 +73,22 @@ df["id"] = df["State or Union Territory"].apply(lambda x: state_id_map[x])
 # Выводим новую таблицу с новые заголовки с данными
 print(list(df.columns.values.tolist()))
 # Вводим необходимые данные для отображения индии на карте мира
-fig = px.choropleth(df,
-                    locations='id',
-                    geojson=india_states,
-                    color='DensityScale',
-                    scope='asia',
-                    hover_name='State or Union Territory',
-                    hover_data=(['Density']))
+# fig = px.choropleth(df,
+#                     locations='id',
+#                     geojson=india_states,
+#                     color='DensityScale',
+#                     scope='asia',
+#                     hover_name='State or Union Territory',
+#                     hover_data=(['Density']))
+fig = px.choropleth_mapbox(df,
+                           locations='id',
+                           geojson=india_states,
+                           color='DensityScale',
+                           hover_name='State or Union Territory',
+                           hover_data=['Density'],
+                           mapbox_style='carto-positron',
+                           center={'lat': 24, 'lon': 78},
+                           zoom=3, opacity=0.5)
 # скрываем карту мира
 fig.update_geos(fitbounds='locations', visible=False)
 fig.show()
