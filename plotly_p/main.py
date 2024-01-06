@@ -14,9 +14,10 @@ data = pd.read_html(page)
 print(f"Page has: {len(data)} table(s)")
 # Нам нужна таблица 1
 table = data[1]
-# Сохраняем таблицу в excel
+# print(table)
+# # Сохраняем таблицу в excel
 table.to_excel('tab.xlsx')
-# Сохраняем таблицу в csv
+# # Сохраняем таблицу в csv
 df = pd.DataFrame(table.to_csv('tab.csv', index=False))
 # Убираем первую строку из таблицы
 with open('tab.csv', 'r') as file:
@@ -26,17 +27,16 @@ with open('tab.csv', 'r') as file:
         for i in file:
             # Запись нового файла
             f_out.write(i)
-df = pd.read_csv('table.csv')
-# заменяем знак [c] после Manipur на ''
-df["State or Union Territory"] = df["State or Union Territory"].apply(lambda x: x.replace('[c]', ''))
-print(df["State or Union Territory"])
+
+# f = df["State or Union Territory"]
 # Открываем файл geojson
-filename = './states_india.geojson'
+filename = './states_india-2.geojson'
 india_states = json.load(open(filename, 'r'))
 # выводим на экран ключи
-print(india_states['features'][0].keys())
+all_key = india_states['features'][1]['properties']
+print(all_key) # dict_keys(['type', 'geometry', 'properties'])
 # Находим ключ словоря 'properties'  в словаре 'features'
-print(india_states['features'][0]['properties'])
+# print(india_states['features'][0]['properties']) # {'cartodb_id': 1, 'state_code': 0, 'st_nm': 'Telangana'}
 # Создаем новый словарь
 state_id_map = {}
 # запускаем цикл для сохраниния значения 'state_code' в
@@ -45,12 +45,18 @@ state_id_map = {}
 for feature in india_states["features"]:
     feature['id'] = feature['properties']['state_code']
     state_id_map[feature['properties']['st_nm']] = feature['id']
-# Заменяем '&' на 'and' как и в файле .csv
-state_id_map = {x.replace('&', 'and'): value for x, value in state_id_map.items()}
-print(state_id_map)
-# открывает изменненый файл
+
+# Заменяем '&' на 'and' и изменяем название некоторых городов как и в файле .csv
+state_id_map = {key.replace('&', 'and').replace('Telengana', 'Telangana')
+                .replace('Delhi', 'NCT of Delhi')
+                .replace('Andaman and Nicobar', 'Andaman and Nicobar Islands'):
+                    value for key, value in state_id_map.items()}
+# print(state_id_map.keys())
 df = pd.read_csv('table.csv')
-# используем функцию lambda для схранения значения  int в df['Density]
-df['Density'] = df['Density [a]'].apply(lambda x: int(x))
-
-
+# Вывод для заголовков таблицы
+print(list(df.columns.values.tolist()))
+#  print(df["Density [a]"])
+#  Изменяем данные на int с помощью фукции lambda и мета apply применяем ко всем
+#  сохраняем в новой переменной
+df['Density'] = df["Density [a]"].apply(lambda x: int(x))
+print(df["Density"])
