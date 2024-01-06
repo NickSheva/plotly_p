@@ -1,6 +1,7 @@
 """Извдечение таблицы из сайта wikipedia
 и сохрание в .csv file"""
 import pandas as pd
+import numpy as np
 import json
 import plotly.express as px
 import plotly.io as pio
@@ -60,6 +61,8 @@ df = pd.read_csv('table.csv')
 #  Изменяем данные на int с помощью фукции lambda и мета apply применяем ко всем
 #  сохраняем в новой переменной для всей таблицы
 df['Density'] = df["Density [a]"].apply(lambda x: int(x))
+# устанавливаем плотновть населения с np.log10
+df['Density'] = np.log10(df['Density'])
 #  print(df["Density"])
 #  Удаляем две строчки 34 и 36, которых нет в .geojson file
 df = df.drop([34, 36])
