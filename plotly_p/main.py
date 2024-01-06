@@ -60,10 +60,11 @@ df = pd.read_csv('table.csv')
 #  print(df["Density [a]"])
 #  Изменяем данные на int с помощью фукции lambda и мета apply применяем ко всем
 #  сохраняем в новой переменной для всей таблицы
-df['Density'] = df["Density [a]"].apply(lambda x: int(x))
-# устанавливаем плотновть населения с np.log10
-df['Density'] = np.log10(df['Density'])
-#  print(df["Density"])
+#  устанавливаем плотновть населения с np.log10
+df['Density'] = np.log10(df["Density [a]"].apply(lambda x: int(x)))
+
+
+print(df["Density"])
 #  Удаляем две строчки 34 и 36, которых нет в .geojson file
 df = df.drop([34, 36])
 #  Все города
@@ -76,5 +77,5 @@ print(list(df.columns.values.tolist()))
 fig = px.choropleth(df, locations='id', geojson=india_states, color='Density', scope='asia')
 # скрываем карту мира
 fig.update_geos(fitbounds='locations', visible=False)
-fig.show()
+# fig.show()
 
